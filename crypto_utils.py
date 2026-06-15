@@ -3,7 +3,7 @@ from cryptography.hazmat.primitives import hashes
 from Crypto.Util.number import getPrime, inverse, bytes_to_long, long_to_bytes
 import random
 
-# ================= RSA IMPLEMENTATION =================
+# RSA IMPLEMENTATION
 def generate_rsa_keys(key_size):
     private_key = rsa.generate_private_key(public_exponent=65537, key_size=key_size)
     return private_key, private_key.public_key()
@@ -33,7 +33,7 @@ def decrypt_rsa(ciphertext, private_key):
         )
     return plaintext
 
-# =============== ELGAMAL IMPLEMENTATION ===============
+# ELGAMAL IMPLEMENTATION 
 def generate_elgamal_keys(key_size):
     p = getPrime(key_size)
     g = 2
@@ -45,7 +45,7 @@ def encrypt_elgamal(plaintext, public_key):
     p, g, y = public_key
     chunk_size = (p.bit_length() - 1) // 8
     ciphertext = b""
-    length = (p.bit_length() + 7) // 8
+    kb = (p.bit_length() + 7) // 8
     
     for i in range(0, len(plaintext), chunk_size):
         chunk = plaintext[i:i+chunk_size]
@@ -53,20 +53,31 @@ def encrypt_elgamal(plaintext, public_key):
         k = random.randint(1, p - 2)
         c1 = pow(g, k, p)
         c2 = (m * pow(y, k, p)) % p
-        ciphertext += long_to_bytes(c1, length) + long_to_bytes(c2, length)
+        
+    
+        ciphertext += len(chunk).to_bytes(1, "big") 
+        ciphertext += long_to_bytes(c1, kb)
+        ciphertext += long_to_bytes(c2, kb)
+        
     return ciphertext
 
 def decrypt_elgamal(ciphertext, private_key):
     p, g, x = private_key
-    length = (p.bit_length() + 7) // 8
-    chunk_size = length * 2
+    kb = (p.bit_length() + 7) // 8
+    block_size = 1 + (kb * 2) 
     plaintext = b""
     
-    for i in range(0, len(ciphertext), chunk_size):
-        chunk = ciphertext[i:i+chunk_size]
-        c1 = bytes_to_long(chunk[:length])
-        c2 = bytes_to_long(chunk[length:])
+    for i in range(0, len(ciphertext), block_size):
+        block = ciphertext[i:i+block_size]
+        
+        original_chunk_len = block[0] 
+        
+        c1 = bytes_to_long(block[1:1+kb])
+        c2 = bytes_to_long(block[1+kb:])
+        
         s = pow(c1, x, p)
         m = (c2 * inverse(s, p)) % p
-        plaintext += long_to_bytes(m)
+        
+        plaintext += m.to_bytes(original_chunk_len, "big") 
+        
     return plaintext

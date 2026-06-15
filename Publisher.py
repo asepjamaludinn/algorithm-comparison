@@ -15,7 +15,7 @@ class MQTTPublisher:
         self.client.tls_set(cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLS)
         self.client.username_pw_set(config.USERNAME, config.PASSWORD)
         self.private_keys_store = {}
-        self.public_keys_store = {} # Menyimpan public key di memori untuk Fase 2
+        self.public_keys_store = {}
 
     def connect(self):
         print(f"\n[*] Menghubungkan ke broker {config.BROKER_ADDRESS}...")
@@ -34,9 +34,7 @@ class MQTTPublisher:
             pickle.dump(self.private_keys_store, f)
 
     def run_experiment(self):
-        # ====================================================================
-        # FASE 1: PEMBANGKITAN SELURUH KUNCI (PRE-COMPUTATION)
-        # ====================================================================
+        # FASE 1: PEMBANGKITAN SELURUH KUNCI
         print("[*] FASE 1: Membangkitkan seluruh kunci kriptografi...")
         for algo in config.ALGORITHMS:
             for key_size in config.KEY_SIZES:
@@ -54,15 +52,12 @@ class MQTTPublisher:
                     priv_key, pub_key = crypto_utils.generate_elgamal_keys(key_size)
                     self.private_keys_store[f"{algo}_{key_size}"] = priv_key
                 
-                # Simpan public key di RAM untuk enkripsi nanti
                 self.public_keys_store[f"{algo}_{key_size}"] = pub_key
 
         self.share_keys()
         print("[*] File shared_keys.pkl berhasil diperbarui dengan seluruh kunci!")
 
-        # ====================================================================
         # FASE 2: EKSEKUSI PENGIRIMAN PESAN
-        # ====================================================================
         print("\n[*] FASE 2: Memulai pengujian dan pengiriman pesan...")
         self.connect()
 
@@ -73,8 +68,6 @@ class MQTTPublisher:
             for algo in config.ALGORITHMS:
                 for key_size in config.KEY_SIZES:
                     print(f"\n[+] Mengeksekusi pengiriman untuk {algo} {key_size}-bit...")
-                    
-                    # Ambil public key dari memori yang sudah dibuat di Fase 1
                     pub_key = self.public_keys_store[f"{algo}_{key_size}"]
                     
                     for size in config.PAYLOAD_SIZES:
