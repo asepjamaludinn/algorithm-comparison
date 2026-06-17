@@ -1,3 +1,9 @@
+Berikut adalah draf README.md yang dirancang khusus untuk repositori Case-6 (Hybrid DHKE) Anda. Draf ini sudah mengintegrasikan konsep Key Exchange (ECC vs ElGamal), penggunaan AES-GCM, serta memanggil keempat file gambar yang baru saja Anda hasilkan dengan penyesuaian spasi (%20) agar dapat di-render sempurna oleh GitHub.
+
+Silakan salin teks di bawah ini dan simpan sebagai file README.md di dalam folder CASE_6 Anda.
+
+Markdown
+
 # Performance Evaluation of Hybrid MQTT Protection: ECC vs ElGamal DH
 
 Sebuah arsitektur pengujian performa keamanan (_Security Performance Benchmarking_) pada protokol komunikasi IoT (MQTT) yang membandingkan efisiensi algoritma pertukaran kunci (_Key Exchange_): **Elliptic Curve Cryptography (ECC)** dan **ElGamal Diffie-Hellman (Finite Field)**. Proyek ini merupakan pemenuhan evaluasi akhir mata kuliah Keamanan Komunikasi Data (Project-2: Case 6).
@@ -33,7 +39,7 @@ Berikut adalah hasil ekstraksi data yang membandingkan performa kedua arsitektur
 **4. Pengaruh Ukuran Plaintext Terhadap Transmission Delay (ElGamal DH)**
 <br><img src="assets/Pengaruh_transmission%20delay%20Elgamal.png" width="800" alt="Transmisi ElGamal DH">
 
-### Insight
+### Insight Utama (Key Findings)
 
 1. **Superioritas Efisiensi Kurva Eliptik (ECC):** ECC terbukti jauh lebih optimal untuk _node_ sensor IoT. Pada level keamanan tertinggi (Level 3), komputasi ECC hanya memakan waktu ~0.004 detik, sementara operasi _Finite Field_ pada ElGamal DH membengkak secara eksponensial hingga ~0.024 detik.
 2. **Kestabilan Kriptografi Hibrida:** Berdasarkan grafik komputasi, garis tren terlihat cenderung datar horizontal meskipun ukuran _plaintext_ bertambah dari 50 ke 250 bytes. Hal ini membuktikan bahwa beban komputasi terberat hanya terjadi pada fase awal (_Key Exchange_), sedangkan proses enkripsi data intinya menggunakan AES-GCM yang berkinerja sangat cepat.
@@ -44,7 +50,7 @@ Berikut adalah hasil ekstraksi data yang membandingkan performa kedua arsitektur
 - `config.py` : Konfigurasi terpusat (kredensial broker, ukuran _payload_, pemetaan _Key Level_).
 - `crypto_utils.py` : Pustaka inti yang memuat logika _Hybrid Cryptography_ (ECC, ElGamal DH, HKDF, dan AES-GCM).
 - `Publisher.py` & `Subscriber.py` : Skrip simulasi _node_ IoT terdistribusi yang menyimulasikan fase _Handshake_ dan pengiriman data.
-- `EDA.py` : untuk analisis statistik dan _rendering_ visualisasi grafik.
+- `EDA.ipynb` : _Jupyter Notebook_ untuk analisis statistik dan _rendering_ visualisasi grafik.
 - `requirements.txt` : Daftar dependensi pustaka Python.
 
 ## Cara Menjalankan
@@ -53,4 +59,20 @@ Berikut adalah hasil ekstraksi data yang membandingkan performa kedua arsitektur
 
 ```bash
 pip install -r requirements.txt
+```
+
+2. Menjalankan Node Publisher (Terminal 1) - Tahap Pre-computation
+   Jalankan Publisher terlebih dahulu. Skrip ini akan membangkitkan parameter matematika dan keypair untuk fase pertukaran kunci.
+
+```bash
+python Publisher.py
+```
+
+(Tunggu hingga muncul indikator FASE 2 bahwa "shared_keys.pkl" telah siap)
+
+3. Menjalankan Node Subscriber (Terminal 2)
+   Buka terminal baru dan jalankan Subscriber agar langsung terhubung dengan Broker dan merespons pesan Publisher.
+
+```
+python Subscriber.py
 ```

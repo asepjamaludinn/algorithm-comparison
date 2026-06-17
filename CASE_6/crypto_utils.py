@@ -5,7 +5,6 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives import serialization
 import os
 
-# Memetakan level keamanan setara
 ecc_curves = {
     "Level_1": ec.SECP256R1(),
     "Level_2": ec.SECP384R1(),
@@ -18,7 +17,6 @@ dh_key_sizes = {
     "Level_3": 3072,
 }
 
-# Menyimpan parameter DH di memori agar tidak perlu dihitung berulang kali
 _dh_parameters = {}
 
 def get_dh_parameters(level):
@@ -44,12 +42,11 @@ def compute_shared_secret(algo, my_priv_key, peer_pub_key):
         return my_priv_key.exchange(peer_pub_key)
 
 def derive_symmetric_key(shared_secret):
-    # Menggunakan HKDF untuk mengubah Shared Secret menjadi kunci AES 256-bit murni
     return HKDF(algorithm=hashes.SHA256(), length=32, salt=None, info=b'mqtt_case6_exchange').derive(shared_secret)
 
 def encrypt_payload(symmetric_key, plaintext):
     aesgcm = AESGCM(symmetric_key)
-    nonce = os.urandom(12) # GCM membutuhkan 12 bytes nonce unik
+    nonce = os.urandom(12)
     ciphertext = aesgcm.encrypt(nonce, plaintext, None)
     return nonce + ciphertext
 
@@ -59,7 +56,6 @@ def decrypt_payload(symmetric_key, payload):
     aesgcm = AESGCM(symmetric_key)
     return aesgcm.decrypt(nonce, ciphertext, None)
 
-# --- FUNGSI SERIALISASI UNTUK PICKLE ---
 def serialize_private(priv_key):
     return priv_key.private_bytes(
         encoding=serialization.Encoding.PEM, format=serialization.PrivateFormat.PKCS8, encryption_algorithm=serialization.NoEncryption()
