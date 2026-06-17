@@ -18,6 +18,21 @@ Sistem mengevaluasi dua metrik utama berdasarkan 3 level keamanan (_Key Size_) d
 - **Computational Delay:** Waktu untuk fase _Key Exchange_ ditambah waktu enkripsi/dekripsi AES-GCM.
 - **Transmission Delay:** Waktu tempuh _ciphertext_ melewati jaringan publik internet.
 
+---
+
+## Hasil Evaluasi
+
+Berdasarkan ekstraksi data dari eksperimen pengiriman pesan, diperoleh ringkasan rata-rata performa sebagai berikut:
+
+| Algoritma      | Level Keamanan | Komputasi Pub (s) | Komputasi Sub (s) | Total Komputasi (s) | Transmisi (s) | Jitter (s) |
+| :------------- | :------------- | :---------------- | :---------------- | :------------------ | :------------ | :--------- |
+| **ECC**        | Level_1        | 0.000216          | 0.000172          | 0.000388            | 0.320989      | 0.208695   |
+| **ECC**        | Level_2        | 0.001124          | 0.000911          | 0.002035            | 0.295251      | 0.107994   |
+| **ECC**        | Level_3        | 0.002086          | 0.002088          | 0.004174            | 0.340022      | 0.183650   |
+| **ELGAMAL_DH** | Level_1        | 0.000464          | 0.000423          | 0.000887            | 4.756819      | 5.979816   |
+| **ELGAMAL_DH** | Level_2        | 0.005635          | 0.005699          | 0.011334            | 0.498856      | 0.664226   |
+| **ELGAMAL_DH** | Level_3        | 0.013284          | 0.011193          | 0.024477            | 0.369550      | 0.205692   |
+
 ## Visualisasi Data Eksperimen
 
 Berikut adalah hasil ekstraksi data yang membandingkan performa kedua arsitektur:
