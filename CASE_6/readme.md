@@ -1,9 +1,3 @@
-Berikut adalah draf README.md yang dirancang khusus untuk repositori Case-6 (Hybrid DHKE) Anda. Draf ini sudah mengintegrasikan konsep Key Exchange (ECC vs ElGamal), penggunaan AES-GCM, serta memanggil keempat file gambar yang baru saja Anda hasilkan dengan penyesuaian spasi (%20) agar dapat di-render sempurna oleh GitHub.
-
-Silakan salin teks di bawah ini dan simpan sebagai file README.md di dalam folder CASE_6 Anda.
-
-Markdown
-
 # Performance Evaluation of Hybrid MQTT Protection: ECC vs ElGamal DH
 
 Sebuah arsitektur pengujian performa keamanan (_Security Performance Benchmarking_) pada protokol komunikasi IoT (MQTT) yang membandingkan efisiensi algoritma pertukaran kunci (_Key Exchange_): **Elliptic Curve Cryptography (ECC)** dan **ElGamal Diffie-Hellman (Finite Field)**. Proyek ini merupakan pemenuhan evaluasi akhir mata kuliah Keamanan Komunikasi Data (Project-2: Case 6).
